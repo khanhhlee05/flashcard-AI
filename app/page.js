@@ -1,5 +1,5 @@
 import Image from "next/image";
-import 
+import getStripe 
 
 export default function Home() {
   return (
