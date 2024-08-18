@@ -1,7 +1,7 @@
 "use client"
 
 import { db } from "@/firebase"
-import { Box, Button, Card, CardActionArea, Container, Grid, Paper, TextField, Typography, CardContent, Dialog, DialogContentText } from "@mui/material"
+import { Box, Button, Card, CardActionArea, Container, Grid, Paper, TextField, Typography, CardContent, Dialog, DialogContentText, DialogTitle, DialogContent, DialogActions } from "@mui/material"
 import { writeBatch } from "firebase/firestore"
 import { useRouter } from "next/navigation"
 import { useState } from "react"
@@ -164,7 +164,21 @@ export default function Generate() {
         )}
 
         <Dialog open = {open} onClose = {handleClose}>
-            <DialogContentText
+            <DialogTitle>Save Flashcards</DialogTitle>
+            <DialogContent>
+                <DialogContentText>
+                    Enter a name for your flashcards
+                </DialogContentText>
+                <TextField value={name} onChange={(e) => setName(e.target.value)} label="Collection Name" fullWidth />
+            </DialogContent>
+            <DialogActions>
+                <Button onClick={handleClose} color="primary">
+                    Cancel
+                </Button>
+                <Button onClick={saveFlashcards} color="primary" autoFocus>
+                    Save
+                </Button>
+            </DialogActions>
         </Dialog>
     </Container>
 
