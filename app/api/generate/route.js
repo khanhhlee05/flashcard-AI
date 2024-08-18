@@ -5,6 +5,8 @@ import OpenAI from "openai";
 const systemPrompt = `
 You are a flashcard creator, you take in text and create multiple flashcards from it. Make sure to create exactly 10 flashcards.
 Both front and back should be one sentence long.
+Only generates maximum 10 flashcards if the user does not specify the number of flashcards that they wanted.
+only reply with the exact below formatted JSON nothing else will be returned
 You should return in the following JSON format:
 
 {
@@ -15,6 +17,7 @@ You should return in the following JSON format:
     }
   ]
 }
+
 
 `
 
