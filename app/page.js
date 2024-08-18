@@ -1,12 +1,39 @@
+"use client"
 import Image from "next/image";
 import getStripe from "./utils/get-stripe";
 import { SignedIn, SignedOut, UserButton } from "@clerk/nextjs";
 import { AppBar, Button, Container, Toolbar, Typography, Box, Grid } from "@mui/material"
-import Head from "next/head";
-
+import Head from "next/head"
+import './globals.css'
 
 
 export default function Home() {
+  const handleSubmit = async () => {
+    const checkoutSession = await fetch('api/checkout_sessions', {
+      method: 'POST',
+      headers: {
+        origin: "http://localhost:3000",  
+       },
+    })
+
+    const checkoutSessionJson = await checkoutSession.json()
+
+    if (checkoutSessionJson.statusCode === 500){
+      console.error(checkoutSessionJson.message)
+      return
+    }
+
+    const stripe = await getStripe()
+    const {error} = await stripe.redirectToCheckout({
+      sessionId: checkoutSessionJson.id
+    })
+
+    if (error){
+      console.warn(error.message)
+    }
+
+
+  }
   return (
     <Container maxWidth="100vw">
       <Head>
@@ -42,7 +69,7 @@ export default function Home() {
           The easiest to make flashcards from your text
         </Typography>
 
-        <Button variant="contained" color="primary" sx={{ mt: 2 }}>
+        <Button variant="contained" color="primary" sx={{ mt: 2 }} href="/generate">
           Get Started
         </Button>
       </Box>
@@ -90,7 +117,7 @@ export default function Home() {
               <Typography variant="5" gutterBottom>Basic</Typography>
               <Typography variant="h6" gutterBottom>$5 / month</Typography>
               <Typography>Access to basic flashcard features and limited storage</Typography>
-              <Button variant="contained" color="primary" sx={{mt:2}}>
+              <Button variant="contained" color="primary" sx={{mt:2}} onClick={handleSubmit}>
                 {" "}
                 Choose basic
               </Button>
@@ -109,7 +136,7 @@ export default function Home() {
               <Typography variant="5" gutterBottom>Pro</Typography>
               <Typography variant="h6" gutterBottom>$10 / month</Typography>
               <Typography>Unlimited access to flashcards and storage. With priority storage</Typography>
-              <Button variant="contained" color="primary" sx={{mt:2}}>
+              <Button variant="contained" color="primary" sx={{mt:2}} onClick={handleSubmit}>
                 {" "}
                 Choose pro
               </Button>
